@@ -36,6 +36,9 @@ async function query(filterBy = {}) {
     if (filterBy.maxPrice) {
         books = books.filter(book => book.listPrice.amount <= +filterBy.maxPrice)
     }
+    if (filterBy.isOnSale) {
+        books = books.filter(book => book.listPrice.isOnSale)
+    }
 
     return books
 }

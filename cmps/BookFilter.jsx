@@ -1,26 +1,18 @@
 const { useState, useEffect } = React
 
 export function BookFilter({ filterBy, onSetFilter }) {
-    // Local state to control inputs
     const [title, setTitle] = useState(filterBy.title || '')
     const [maxPrice, setMaxPrice] = useState(filterBy.maxPrice || '')
+    const [isOnSale, setIsOnSale] = useState(filterBy.isOnSale || false)
 
     useEffect(() => {
-        // When filterBy changes, update local state
         setTitle(filterBy.title || '')
         setMaxPrice(filterBy.maxPrice || '')
+        setIsOnSale(filterBy.isOnSale || false)
     }, [filterBy])
 
-    function onTitleChange(ev) {
-        const value = ev.target.value
-        setTitle(value)
-        onSetFilter({ title: value })
-    }
-
-    function onPriceChange(ev) {
-        const value = +ev.target.value
-        setMaxPrice(ev.target.value)
-        onSetFilter({ maxPrice: value })
+    function onChange() {
+        onSetFilter({ title, maxPrice, isOnSale })
     }
 
     return (
@@ -29,16 +21,31 @@ export function BookFilter({ filterBy, onSetFilter }) {
                 type="text"
                 placeholder="Filter by title"
                 value={title}
-                onChange={onTitleChange}
+                onChange={ev => {
+                    setTitle(ev.target.value)
+                    onSetFilter({ title: ev.target.value })
+                }}
             />
             <input
                 type="number"
                 placeholder="Max price"
                 value={maxPrice}
-                onChange={onPriceChange}
-                min="0"
+                onChange={ev => {
+                    setMaxPrice(ev.target.value)
+                    onSetFilter({ maxPrice: +ev.target.value })
+                }}
             />
+            <label>
+                <input
+                    type="checkbox"
+                    checked={isOnSale}
+                    onChange={ev => {
+                        setIsOnSale(ev.target.checked)
+                        onSetFilter({ isOnSale: ev.target.checked })
+                    }}
+                />
+                On Sale Only
+            </label>
         </section>
     )
 }
-
