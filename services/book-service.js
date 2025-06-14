@@ -2,7 +2,7 @@ console.log('book-service.js loaded')
 
 
 import { storageService } from './async-storage.service.js'
-import { makeId } from './util.service.js'
+import { makeId, makeLorem, getRandomIntInclusive } from './util.service.js'
 
 const BOOK_KEY = 'bookDB'
 _createBooks()
@@ -63,13 +63,31 @@ function getDefaultFilter() {
 }
 
 function _createBooks() {
+    const ctgs = ['Love', 'Fiction', 'Poetry', 'Computers', 'Religion']
     let books = JSON.parse(localStorage.getItem(BOOK_KEY)) || []
+
     if (!books.length) {
-        books = [
-            _createBook('The Great Gatsby', 25),
-            _createBook('To Kill a Mockingbird', 30),
-            _createBook('1984', 20),
-        ]
+        books = []
+        for (let i = 0; i < 20; i++) {
+            const book = {
+                id: makeId(),
+                title: makeLorem(2),
+                subtitle: makeLorem(4),
+                authors: [makeLorem(1)],
+                publishedDate: getRandomIntInclusive(1950, 2024),
+                description: makeLorem(20),
+                pageCount: getRandomIntInclusive(20, 600),
+                categories: [ctgs[getRandomIntInclusive(0, ctgs.length - 1)]],
+                thumbnail: `https://picsum.photos/id/${i + 1}/200/300`,
+                language: "en",
+                listPrice: {
+                    amount: getRandomIntInclusive(80, 500),
+                    currencyCode: "EUR",
+                    isOnSale: Math.random() > 0.7
+                }
+            }
+            books.push(book)
+        }
         localStorage.setItem(BOOK_KEY, JSON.stringify(books))
     }
 }
