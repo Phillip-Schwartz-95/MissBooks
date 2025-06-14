@@ -16,7 +16,7 @@ export function BookFilter({ defaultFilter, onSetFilter }) {
 
     return (
         <section className="book-filter container">
-            <h2>Filter Our Books</h2>
+            <h2>Filter Books</h2>
             <form>
                 <label htmlFor="txt">Title</label>
                 <input
