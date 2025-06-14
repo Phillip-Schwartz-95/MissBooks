@@ -33,6 +33,7 @@ export function BookIndex() {
     }
 
     function onSelectBookId(bookId) {
+        console.log('BookIndex: selected book id:', bookId)
         setSelectedBookId(bookId)
     }
 

@@ -17,18 +17,29 @@ export const bookService = {
 }
 
 async function query(filterBy = {}) {
-    return storageService.query('bookDB')
-        .then(books => {
-            if (filterBy.title) {
-                const regex = new RegExp(filterBy.title, 'i')
-                books = books.filter(book => regex.test(book.title))
-            }
-            if (filterBy.maxPrice) {
-                books = books.filter(book => book.listPrice.amount <= +filterBy.maxPrice)
-            }
-            return books
-        })
+    let books = await storageService.query('bookDB')
+
+    // If no books exist, demo books
+    if (!books || !books.length) {
+        console.log('📚 No books found — seeding data...')
+        books = _createBooks()
+        const savePromises = books.map(book => storageService.post('bookDB', book))
+        await Promise.all(savePromises)
+        books = await storageService.query('bookDB')
+    }
+
+    // Apply filters
+    if (filterBy.title) {
+        const regex = new RegExp(filterBy.title, 'i')
+        books = books.filter(book => regex.test(book.title))
+    }
+    if (filterBy.maxPrice) {
+        books = books.filter(book => book.listPrice.amount <= +filterBy.maxPrice)
+    }
+
+    return books
 }
+
 
 function get(bookId) {
     return storageService.get(BOOK_KEY, bookId)
@@ -90,7 +101,9 @@ function _createBooks() {
         }
         localStorage.setItem(BOOK_KEY, JSON.stringify(books))
     }
+    return books
 }
+
 
 function _createBook(title, amount) {
     return {
