@@ -17,13 +17,17 @@ export const bookService = {
 }
 
 async function query(filterBy = {}) {
-    return storageService.query(BOOK_KEY).then(books => {
-        if (filterBy.txt) {
-            const regex = new RegExp(filterBy.txt, 'i')
-            books = books.filter(book => regex.test(book.title))
-        }
-        return books
-    })
+    return storageService.query('bookDB')
+        .then(books => {
+            if (filterBy.title) {
+                const regex = new RegExp(filterBy.title, 'i')
+                books = books.filter(book => regex.test(book.title))
+            }
+            if (filterBy.maxPrice) {
+                books = books.filter(book => book.listPrice.amount <= +filterBy.maxPrice)
+            }
+            return books
+        })
 }
 
 function get(bookId) {

@@ -48,7 +48,7 @@ export function BookIndex() {
             ) : (
                 <Fragment>
                     <BookFilter
-                        defaultFilter={filterBy}
+                        filterBy={filterBy}
                         onSetFilter={onSetFilter}
                     />
                     <BookList
