@@ -1,4 +1,5 @@
 import { bookService } from '../services/book-service.js'
+import { eventBusService } from '../services/eventbus-service.js'
 const { useState, useEffect } = React
 
 export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
@@ -35,7 +36,9 @@ export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
   function onSave(ev) {
     ev.preventDefault()
     bookService.save(bookToEdit)
+    bookService.save(bookToEdit)
       .then(() => {
+        eventBusService.showMsg('Book saved!')
         if (onSaveSuccess) onSaveSuccess()
       })
       .catch(err => console.log('Error saving book:', err))

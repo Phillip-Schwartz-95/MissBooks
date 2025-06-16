@@ -4,6 +4,7 @@ import { AppHeader } from "./cmps/AppHeader.jsx"
 import { About } from "./pages/About.jsx"
 import { Home } from "./pages/Home.jsx"
 import { BookIndex } from "./pages/BookIndex.jsx"
+import { UserMsg } from "./cmps/UserMsg.jsx"
 
 export function RootCmp() {
 
@@ -18,6 +19,7 @@ export function RootCmp() {
                 {page === 'about' && <About />}
                 {page === 'books' && <BookIndex />}
             </main>
+            <UserMsg />
         </section>
     )
 } 

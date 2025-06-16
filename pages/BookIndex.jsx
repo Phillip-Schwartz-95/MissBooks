@@ -3,6 +3,7 @@ import { BookList } from "../cmps/BookList.jsx"
 import { bookService } from "../services/book-service.js"
 import { BookDetails } from "./BookDetails.jsx"
 import { BookEdit } from "../cmps/BookEdit.jsx"
+import { eventBusService } from '../services/eventbus-service.js'
 
 const { useState, useEffect, Fragment } = React
 
@@ -25,6 +26,7 @@ export function BookIndex() {
   function onRemoveBook(bookId) {
     bookService.remove(bookId)
       .then(() => {
+        eventBusService.showMsg('Book deleted!')
         setBooks(books => books.filter(book => book.id !== bookId))
       })
       .catch(err => console.log('Error removing book:', err))
