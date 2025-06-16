@@ -39,7 +39,7 @@ export function BookIndex() {
   }
 
   function onAddNewBook() {
-    setEditingBookId(null) // null means "new book"
+    setEditingBookId('new') // means "new book"
   }
 
   function onEditBook(bookId) {
@@ -60,7 +60,7 @@ export function BookIndex() {
 
   return (
     <section className="book-index">
-      {editingBookId !== null ? (
+      {(editingBookId) ? (
         <BookEdit
           bookId={editingBookId}
           onSaveSuccess={onSaveSuccess}

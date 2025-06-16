@@ -1,12 +1,11 @@
 import { bookService } from '../services/book-service.js'
-const { useState } = React
+const { useState, useEffect } = React
 
 export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
   const [bookToEdit, setBookToEdit] = useState(null)
 
-  if (!bookToEdit) {
-    // Load book manually using Promises
-    if (bookId) {
+  useEffect(() => {
+    if (bookId && bookId !== 'new') {
       bookService.get(bookId)
         .then(book => setBookToEdit(book))
         .catch(err => console.log('Error loading book:', err))
@@ -14,8 +13,9 @@ export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
       const emptyBook = bookService.getEmptyBook()
       setBookToEdit(emptyBook)
     }
-    return <div>Loading...</div>
-  }
+  }, [bookId])
+
+  if (!bookToEdit) return <div>Loading...</div>
 
   function handleChange({ target }) {
     const { name, value, type, checked } = target
