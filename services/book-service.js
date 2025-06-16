@@ -13,7 +13,9 @@ export const bookService = {
     remove,
     save,
     getEmptyBook,
-    getDefaultFilter
+    getDefaultFilter,
+    addReview,
+    removeReview,
 }
 
 async function query(filterBy = {}) {
@@ -70,6 +72,23 @@ function getEmptyBook(title = '', amount = 0) {
             isOnSale: false
         }
     }
+}
+
+function addReview(bookId, review) {
+    return bookService.get(bookId).then(book => {
+        if (!book.reviews) book.reviews = []
+        review.id = makeId()
+        book.reviews.push(review)
+        return bookService.save(book)
+    })
+}
+
+function removeReview(bookId, reviewId) {
+    return bookService.get(bookId).then(book => {
+        if (!book.reviews) return Promise.reject('No reviews found')
+        book.reviews = book.reviews.filter(review => review.id !== reviewId)
+        return bookService.save(book)
+    })
 }
 
 function getDefaultFilter() {
