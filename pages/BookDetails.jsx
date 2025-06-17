@@ -1,15 +1,25 @@
+
 import { bookService } from "../services/book-service.js"
 import { LongTxt } from '../cmps/LongText.jsx'
 import { AddReview } from '../cmps/AddReview.jsx'
 
 const { useState, useEffect } = React
+const { useNavigate } = ReactRouterDOM
 
 export function BookDetails({ bookId, onBack }) {
     const [book, setBook] = useState(null)
+    const [books, setBooks] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         loadBook()
     }, [bookId])
+
+     useEffect(() => {
+        bookService.query()
+            .then(setBooks)
+            .catch(err => console.log('Error loading books:', err))
+    }, [])
 
     function loadBook() {
         bookService.get(bookId)
@@ -48,6 +58,18 @@ export function BookDetails({ bookId, onBack }) {
     if (listPrice.amount > 150) priceClass = 'expensive'
     else if (listPrice.amount < 20) priceClass = 'cheap'
 
+    //next/prev navigation
+    const currIndex = books.findIndex(b => b.id === bookId)
+    if (currIndex === -1) return <div>Book not found in the list</div>
+
+    // indexes with rotation
+    const prevIndex = currIndex === 0 ? books.length - 1 : currIndex - 1
+    const nextIndex = currIndex === books.length - 1 ? 0 : currIndex + 1
+
+    const goPrev = () => navigate(`/book/${books[prevIndex].id}`)
+    const goNext = () => navigate(`/book/${books[nextIndex].id}`)
+
+
     return (
         <section className="book-details container">
             <h1>Book Title: {title}</h1>
@@ -84,7 +106,11 @@ export function BookDetails({ bookId, onBack }) {
                 </section>
             )}
 
-            <button onClick={onBack}>Back</button>
+            <div className="book-nav-buttons">
+                <button onClick={goPrev}>Previous</button>
+                <button onClick={goNext}>Next</button>
+            </div>
+
         </section>
     )
 }
