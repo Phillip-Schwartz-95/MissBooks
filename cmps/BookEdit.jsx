@@ -1,9 +1,12 @@
 import { bookService } from '../services/book-service.js'
 import { eventBusService } from '../services/eventbus-service.js'
+
 const { useState, useEffect } = React
+const { useNavigate } = ReactRouterDOM
 
 export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
   const [bookToEdit, setBookToEdit] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (bookId && bookId !== 'new') {
@@ -36,17 +39,18 @@ export function BookEdit({ bookId, onSaveSuccess, onCancel }) {
   function onSave(ev) {
     ev.preventDefault()
     bookService.save(bookToEdit)
-    bookService.save(bookToEdit)
       .then(() => {
         eventBusService.showMsg('Book saved!')
         if (onSaveSuccess) onSaveSuccess()
+        navigate('/book')
       })
       .catch(err => console.log('Error saving book:', err))
   }
 
-  function onCancelClick(ev) {
-    ev.preventDefault()
-    if (onCancel) onCancel()
+
+  function onCancelClick() {
+
+    navigate('/book') //use route
   }
 
   return (

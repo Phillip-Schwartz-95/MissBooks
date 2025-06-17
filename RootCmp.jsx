@@ -1,25 +1,45 @@
-const { useState } = React
+const { HashRouter, Routes, Route, useParams } = ReactRouterDOM
 
 import { AppHeader } from "./cmps/AppHeader.jsx"
 import { About } from "./pages/About.jsx"
 import { Home } from "./pages/Home.jsx"
 import { BookIndex } from "./pages/BookIndex.jsx"
+import { BookDetails } from "./pages/BookDetails.jsx"
+import { BookEdit } from "./cmps/BookEdit.jsx"
 import { UserMsg } from "./cmps/UserMsg.jsx"
 
 export function RootCmp() {
-
-    const [page, setPage] = useState('books')
-
     return (
-        <section className="app">
-            <AppHeader onSetPage={(page) => setPage(page)} />
+        <HashRouter>
+            <section className="app">
+                <AppHeader />
 
-            <main>
-                {page === 'home' && <Home />}
-                {page === 'about' && <About />}
-                {page === 'books' && <BookIndex />}
-            </main>
-            <UserMsg />
-        </section>
+                <main>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/book" element={<BookIndex />} />
+                        <Route path="/book/:bookId" element={<BookDetailsWrapper />} />
+                        <Route path="/book/edit" element={<BookEditWrapper />} />
+                        <Route path="/book/edit/:bookId" element={<BookEditWrapper />} />
+                    </Routes>
+                </main>
+
+                <UserMsg />
+            </section>
+        </HashRouter>
     )
-} 
+
+    // Inline wrappers
+    function BookDetailsWrapper() {
+        const { bookId } = useParams()
+        return <BookDetails bookId={bookId} />
+    }
+
+    function BookEditWrapper() {
+        let { bookId } = useParams()
+        if (bookId === 'edit' || !bookId) bookId = 'new'
+        return <BookEdit bookId={bookId} />
+    }
+}
+
