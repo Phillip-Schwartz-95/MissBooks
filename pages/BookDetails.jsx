@@ -95,7 +95,11 @@ export function BookDetails({ bookId, onBack }) {
             {readingLevel && <p> {readingLevel}</p>}
             {publicationLabel && <p> {publicationLabel}</p>}
             <LongTxt txt={description} length={100} />
-            <img src={thumbnail} alt="Book cover" />
+            <img
+                src={book.thumbnail}
+                alt={book.title}
+                className="animate__animated animate__zoomIn"
+            />
 
             <AddReview bookId={bookId} onAddReview={onAddReview} />
 
