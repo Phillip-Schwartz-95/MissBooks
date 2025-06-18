@@ -1,11 +1,13 @@
+import { BookRating } from './BookRating.jsx'
 const { useState } = React
 
 export function AddReview({ bookId, onAddReview }) {
     const [review, setReview] = useState({
         fullname: '',
-        rating: 1,
         readAt: ''
     })
+    const [rateType, setRateType] = useState('stars')
+    const [rating, setRating] = useState(1)
 
     function handleChange(ev) {
         const { name, value } = ev.target
@@ -18,12 +20,21 @@ export function AddReview({ bookId, onAddReview }) {
             alert('Please fill all fields')
             return
         }
-        onAddReview(review)
-        setReview({ fullname: '', rating: 1, readAt: '' })
+        onAddReview({ ...review, rating })
+        setReview({ fullname: '', readAt: '' })
+        setRating(1)
+        setRateType('stars')
     }
 
     return (
         <form onSubmit={onSubmit} className="add-review">
+            <BookRating
+                rateType={rateType}
+                setRateType={setRateType}
+                rating={rating}
+                setRating={setRating}
+            />
+
             <label>
                 Full Name:
                 <input
@@ -33,15 +44,6 @@ export function AddReview({ bookId, onAddReview }) {
                     onChange={handleChange}
                     required
                 />
-            </label>
-
-            <label>
-                Rating:
-                <select name="rating" value={review.rating} onChange={handleChange}>
-                    {[1, 2, 3, 4, 5].map(n => (
-                        <option key={n} value={n}>{'★'.repeat(n)}</option>
-                    ))}
-                </select>
             </label>
 
             <label>
