@@ -8,11 +8,8 @@ const cmpMap = {
   stars: RateByStars,
 }
 
-export function BookRating() {
-  const [rateType, setRateType] = React.useState('stars')
-  const [rating, setRating] = React.useState(0)
-
-  const DynamicCmp = cmpMap[rateType]
+export function BookRating({ rateType, setRateType, rating, setRating }) {
+  const DynamicCmp = cmpMap[rateType] || RateByStars
 
   return (
     <section className="book-rating">
