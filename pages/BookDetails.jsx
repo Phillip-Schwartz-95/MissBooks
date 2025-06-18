@@ -2,6 +2,7 @@
 import { bookService } from "../services/book-service.js"
 import { LongTxt } from '../cmps/LongText.jsx'
 import { AddReview } from '../cmps/AddReview.jsx'
+import { BookRating } from "../cmps/BookRating.jsx"
 
 const { useState, useEffect } = React
 const { useNavigate } = ReactRouterDOM
@@ -105,6 +106,8 @@ export function BookDetails({ bookId, onBack }) {
                     </ul>
                 </section>
             )}
+
+            <BookRating />
 
             <div className="book-nav-buttons">
                 <button onClick={goPrev}>Previous</button>
