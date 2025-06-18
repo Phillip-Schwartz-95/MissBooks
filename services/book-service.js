@@ -16,6 +16,7 @@ export const bookService = {
     getDefaultFilter,
     addReview,
     removeReview,
+    addGoogleBook,
 }
 
 async function query(filterBy = {}) {
@@ -126,6 +127,33 @@ function _createBooks() {
     return books
 }
 
+function addGoogleBook(googleBook) {
+  const id = googleBook.id
+  return storageService.query(BOOK_KEY).then(books => {
+    if (books.find(book => book.id === id)) {
+      // Book already exists
+      return Promise.reject('Book already exists')
+    }
+
+    const volumeInfo = googleBook.volumeInfo
+    const newBook = {
+      id,
+      title: volumeInfo.title || 'No title',
+      description: volumeInfo.description || '',
+      thumbnail: (volumeInfo.imageLinks && volumeInfo.imageLinks.thumbnail) || '',
+      listPrice: {
+        amount: getRandomInt(20, 200),
+        currencyCode: 'USD',
+        isOnSale: Math.random() < 0.3,
+      },
+      pageCount: volumeInfo.pageCount || 0,
+      publishedDate: (volumeInfo.publishedDate && volumeInfo.publishedDate.split('-')[0]) || 'Unknown',
+      reviews: [],
+    }
+
+    return storageService.post(BOOK_KEY, newBook)
+  })
+}
 
 function _createBook(title, amount) {
     return {

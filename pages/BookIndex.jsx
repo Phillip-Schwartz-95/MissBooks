@@ -51,6 +51,7 @@ export function BookIndex() {
   return (
     <section className="book-index">
       <button onClick={onAddNewBook}>Add New Book</button>
+      <button onClick={() => navigate('/book/add')}>Search Google Books</button>
       <BookFilter filterBy={filterBy} onSetFilter={onSetFilter} />
       <BookList
         books={books}
