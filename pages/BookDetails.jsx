@@ -16,7 +16,7 @@ export function BookDetails({ bookId, onBack }) {
         loadBook()
     }, [bookId])
 
-     useEffect(() => {
+    useEffect(() => {
         bookService.query()
             .then(setBooks)
             .catch(err => console.log('Error loading books:', err))
@@ -84,6 +84,13 @@ export function BookDetails({ bookId, onBack }) {
             <h4 className={`price ${priceClass}`}>
                 Price: {listPrice.amount} {listPrice.currencyCode}
             </h4>
+
+            <p>
+                <strong>Categories: </strong>
+                {book.categories && book.categories.length > 0
+                    ? book.categories.join(', ')
+                    : 'No Category'}
+            </p>
 
             {readingLevel && <p> {readingLevel}</p>}
             {publicationLabel && <p> {publicationLabel}</p>}

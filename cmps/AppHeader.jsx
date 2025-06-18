@@ -1,4 +1,4 @@
-const { Link } = ReactRouterDOM
+const { Link, NavLink } = ReactRouterDOM
 
 export function AppHeader() {
     return (
@@ -7,7 +7,9 @@ export function AppHeader() {
             <nav>
                 <Link to="/">Home</Link> |
                 <Link to="/about">About</Link> |
-                <Link to="/book">Books</Link>
+                <Link to="/book">Books</Link>  |
+                <NavLink to="/book/dashboard">Dashboard</NavLink>
+
             </nav>
         </header>
     )
