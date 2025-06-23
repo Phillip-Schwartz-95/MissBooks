@@ -1,7 +1,7 @@
 import { bookService } from '../services/book-service.js'
 import { eventBusService } from '../services/eventbus-service.js'
-
 const { useState, useCallback } = React
+
 
 const fakeGoogleBooksData = {
   items: [
@@ -14,11 +14,11 @@ const fakeGoogleBooksData = {
   ]
 }
 
-export function BookAdd({ useFake = false }) { 
+export function BookAdd() {
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState([])
+  const [useFake, setUseFake] = useState(true)
 
-  // Debounce helper
   function debounce(callback, delay) {
     let timeoutId
     return function (...args) {
@@ -27,40 +27,37 @@ export function BookAdd({ useFake = false }) {
     }
   }
 
-  // Real API fetch function
+  // Fetch real Google Books API
   function fetchBooks(term) {
-    if (term.length < 3) {
-      setResults([])
-      return
-    }
     fetch(`https://www.googleapis.com/books/v1/volumes?printType=books&q=${encodeURIComponent(term)}`)
       .then(res => res.json())
       .then(data => setResults(data.items || []))
       .catch(err => console.log('Error fetching Google Books:', err))
   }
 
-  // Fake API fetch
+  // Fetch fake books data
   function fetchFakeBooks(term) {
-    if (term.length < 3) {
-      setResults([])
-      return
-    }
-    // Simulate
-    return new Promise(resolve => setTimeout(() => resolve(fakeGoogleBooksData), 500))
-      .then(data => setResults(data.items || []))
-  }
+  return new Promise(resolve => 
+    setTimeout(() => {
+      // Filter fake books
+      const filteredItems = fakeGoogleBooksData.items.filter(book =>
+        book.volumeInfo.title.toLowerCase().includes(term.toLowerCase())
+      );
+      resolve({ items: filteredItems })
+    }, 300)
+  )
+  .then(data => setResults(data.items || []))
+}
 
-  // Pick fetch function based on flag
-  const fetchFunc = useFake ? fetchFakeBooks : fetchBooks
+const fetchFunc = useFake ? fetchFakeBooks : fetchBooks
 
-  // Debounced fetch wrapped with useCallback to prevent duplicate
-  const debouncedFetchBooks = useCallback(debounce(fetchFunc, 300), [useFake])
+const debouncedFetchBooks = useCallback(debounce(fetchFunc, 300), [useFake])
 
-  function onSearchChange(ev) {
-    const term = ev.target.value
-    setSearchTerm(term)
-    debouncedFetchBooks(term)
-  }
+function onSearchChange(ev) {
+  const term = ev.target.value
+  setSearchTerm(term)
+  debouncedFetchBooks(term)
+}
 
   function onAddBook(googleBook) {
     bookService.addGoogleBook(googleBook)
@@ -76,9 +73,20 @@ export function BookAdd({ useFake = false }) {
       })
   }
 
+  function toggleUseFake() {
+    setUseFake(prev => !prev)
+    setResults([]) // Clear results on toggle
+    setSearchTerm('') // Clear search input 
+  }
+
   return (
     <section className="book-add container">
       <h2>Search Google Books</h2>
+
+      <button onClick={toggleUseFake}>
+        {useFake ? 'Switch to Real Google Books' : 'Switch to Fake Books'}
+      </button>
+
       <input
         type="text"
         placeholder="Search books..."
@@ -89,7 +97,7 @@ export function BookAdd({ useFake = false }) {
       <ul className="google-results">
         {results.map(book => (
           <li key={book.id}>
-            {book.volumeInfo.title}
+            {(book.volumeInfo && book.volumeInfo.title) || 'No Title'}
             <button onClick={() => onAddBook(book)}>➕</button>
           </li>
         ))}

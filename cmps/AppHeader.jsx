@@ -1,16 +1,16 @@
-const { Link, NavLink } = ReactRouterDOM
-
 export function AppHeader() {
-    return (
-        <header className="app-header">
-            <h1>Miss Books</h1>
-            <nav>
-                <Link to="/">Home</Link> |
-                <Link to="/about">About</Link> |
-                <Link to="/book">Books</Link>  |
-                <NavLink to="/book/dashboard">Dashboard</NavLink>
+  const { NavLink } = ReactRouterDOM
 
-            </nav>
-        </header>
-    )
+  return (
+    <header className="app-header">
+      <h1>Miss Books</h1>
+      <nav>
+        <NavLink to="/">Home</NavLink> | 
+        <NavLink to="/about">About</NavLink> | 
+        <NavLink to="/book">Books</NavLink> | 
+        <NavLink to="/book/dashboard">Dashboard</NavLink>
+      </nav>
+    </header>
+  )
 }
+

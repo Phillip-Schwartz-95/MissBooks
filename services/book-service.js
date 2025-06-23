@@ -93,7 +93,7 @@ function removeReview(bookId, reviewId) {
 }
 
 function getDefaultFilter() {
-    return { txt: '' }
+    return { title: '', maxPrice: '', isOnSale: false }
 }
 
 function _createBooks() {
